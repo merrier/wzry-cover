@@ -1,0 +1,18 @@
+{
+  "apps": [{
+    "name": "valexa",
+    "script": "./bin/start.js",
+    "log_date_format": "YYYY-MM-DD HH:mm Z",
+    "out_file": "pm2-valexa-out.log",
+    "error_file": "pm2-valexa-err.log",
+    "pid_file": "pm2-valexa.pid",
+    "ignoreWatch": ["[\\/\\\\]\\./", "node_modules"],
+    "watch": "false",
+    "kill_timeout" : 3000,
+    "exec_mode": "fork_mode", //cluster_mode
+    "env": {
+      "NODE_ENV": "production",
+      "PORT": 8804
+    }
+  }]
+}
