@@ -34,7 +34,7 @@ class HomeHeader extends Component {
             <header className="home-header-container">
                 <div className="home-header-container-content">
                     <a href="http://insight.bytedance.net">
-                        <Image className="logo" src={require('static/img/video_logo.png')} alt="logo"/>
+                        <Image className="logo" src={require('static/img/logo.png')} alt="logo"/>
                     </a>
 
                     <Search className="search"
