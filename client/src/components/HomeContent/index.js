@@ -1,14 +1,12 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import * as homeActions from '../../actions/home';
+import React, { Component } from 'react';
 
 import SelectRadio from 'components/SelectRadio/index';
 import SelectTags from 'components/SelectTags/index';
 import SelectCascade from 'components/SelectCascade/index';
 import ExportButton from 'components/ExportButton/index';
-import {tableToExcel} from 'plugins/exportToExcel';
+// import { tableToExcel } from 'plugins/exportToExcel';
 
-import {Table, Form} from 'antd';
+import { Table, Form } from 'antd';
 
 require('./index.less');
 
@@ -17,13 +15,24 @@ class HomeContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: props.loading,
+            tableSource: props.tableSource,
             filteredInfo: {},
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.loading !== this.props.loading) {
+            this.setState({
+                loading: nextProps.loading,
+                tableSource: nextProps.tableSource,
+            });
+        }
+    }
+
     handleChange = (type, dataIndex, value) => {
 
-        if(this.state.filteredInfo === null){
+        if (this.state.filteredInfo === null) {
             this.setState({
                 filteredInfo: {},
             })
@@ -32,104 +41,76 @@ class HomeContent extends Component {
         switch (type) {
             case 'radio':
                 this.setState({
-                    filteredInfo: Object.assign(this.state.filteredInfo, {[dataIndex]: [value]})
+                    filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: [value] })
                 });
                 break;
             case 'cascade':
             case 'tags':
                 this.setState({
-                    filteredInfo: Object.assign(this.state.filteredInfo, {[dataIndex]: value})
+                    filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value })
                 });
                 break;
         }
     };
 
-    exportButtonClick = (domClassName) => {
-        let tableDom = document.getElementsByClassName(domClassName)[0];
-        tableToExcel(tableDom, '平台作者数据汇总');
-    };
-
     render() {
-        let {data,tableSource} = this.props;
+        let { tableSource, loading } = this.state;
         let self = this;
-        let {filteredInfo} = this.state;
-        filteredInfo = filteredInfo || {};
+
+        console.log('tableSource', tableSource);
 
         const columns = [{
-            title: '序号',
-            dataIndex: 'order',
-            width: 100,
-        }, {
-            title: '作者名',
-            dataIndex: 'name',
-            width: 150,
+            title: '封面图',
+            dataIndex: 'sThumbURL',
+            // width: 150,
+            // filteredValue: filteredInfo.platform || null,
             render: (text, record) => {
-                return <a href={record.url}>{text}</a>;
+                const name = decodeURIComponent(record.sProdName);
+                return <img className='thumb' title={name} alt={name} src={decodeURIComponent(text)} />;
             }
         }, {
-            title: '平台',
-            dataIndex: 'platform',
-            width: 150,
-            filteredValue: filteredInfo.platform || null,
-            onFilter: (value, record) => {
-                if (value === '不限') {
-                    return true;
-                } else {
-                    return record.platform.includes(value);
-                }
-            },
+            title: '发布时间',
+            dataIndex: 'dtInputDT',
+            // width: 100,
+            render: (text) => {
+                return decodeURIComponent(text);
+            }
         }, {
-            title: '分类',
-            dataIndex: 'category',
-            width: 150,
-            filteredValue: filteredInfo.category || null,
-            onFilter: (value, record) => {
-                if (value === '不限') {
-                    return true;
-                } else {
-                    return record.category.includes(value);
-                }
-            },
+            title: '皮肤名称',
+            dataIndex: 'sProdName',
+            // width: 150,
+            render: (text) => {
+                return decodeURIComponent(text);
+            }
         }, {
-            title: '原创评级',
-            dataIndex: 'grade',
-            width: 120,
-            filteredValue: filteredInfo.grade || null,
-            onFilter: (value, record) => {
-                if (value === '不限') {
-                    return true;
-                } else {
-                    return record.grade.includes(value);
-                }
-            },
-        }, {
-            title: '关联状态',
-            dataIndex: 'status',
-            width: 120,
-            filteredValue: filteredInfo.status || null,
-            onFilter: (value, record) => {
-                if (value === '不限') {
-                    return true;
-                } else {
-                    return record.status.includes(value);
-                }
-            },
-        }, {
-            title: '负责人',
-            dataIndex: 'director',
-            filteredValue: filteredInfo.director || null,
-            onFilter: (value, record) => {
-                if (value === '不限') {
-                    return true;
-                } else {
-                    return record.director.includes(value);
-                }
-            },
+            title: '查看',
+            dataIndex: 'sProdImgNo',
+            // width: 150,
+            // filteredValue: filteredInfo.category || null,
+            render: (text, record) => {
+                <span>
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_1)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_2)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_3)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_4)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_5)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_6)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_7)}>1920×1240</a>
+                    <Divider type="vertical" />
+                    <a target='_blank' href={decodeURIComponent(record.sProdImgNo_8)}>1920×1240</a>
+                </span>
+            }
         }];
 
         return (
             <article className="home-content-container">
-                <Form className="content-selection" layout="inline">
+                {/* <Form className="content-selection" layout="inline">
 
                     {data.map(function (item, index) {
                         switch (item.type) {
@@ -146,21 +127,22 @@ class HomeContent extends Component {
 
                     <ExportButton domClassName="home-content-table" export={this.exportButtonClick}/>
 
-                </Form>
+                </Form> */}
                 <section className="content-main">
 
-                    <Table className="home-content-table" size='middle' pagination={false} columns={columns}
-                           dataSource={tableSource}
-                           scroll={{y: 'calc(100vh - 200px)'}}/>
+                    <Table
+                        className="home-content-table"
+                        size='middle'
+                        pagination={false}
+                        columns={columns}
+                        rowKey={record => record.iProdId}
+                        loading={loading}
+                        dataSource={tableSource}
+                        scroll={{ y: 'calc(100vh - 200px)' }} />
                 </section>
             </article>
         )
     }
 }
 
-export default connect(
-    state => ({
-        home: state.home
-    }),
-    homeActions
-)(HomeContent);
+export default HomeContent;

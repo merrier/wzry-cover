@@ -1,40 +1,44 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import * as homeActions from '../actions/home';
+import React, { Component } from 'react';
 import HomeContent from 'components/HomeContent';
+
+import utils from 'plugins/utils';
 
 class Home extends Component {
 
-    componentWillMount () {
-        this.props.loadHomeSelectionList().then(res => {
-            if (res.error) {
-                console.error('error appears');
-            }
-        });
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true,
+            tableSource: [],
+        }
     }
 
-    componentDidMount () {
-        this.props.loadHomeTableSource().then(res => {
-            if (res.error) {
-                console.error('error appears');
-            }
-        });
+    fetchTableSource = async () => {
+        const json = await utils.requestFetch('/api/cover/', false)
+
+        if (json && json.sMsg === 'Successful') {
+            this.setState({
+                tableSource: json.List,
+            })
+        }
+        this.setState({
+            loading: false,
+        })
+    }
+
+    componentWillMount() {
+        this.fetchTableSource();
     }
 
     render() {
-        let { home } = this.props;
+        let { tableSource, loading } = this.state;
 
         return (
             <div className="home-container">
-                <HomeContent data={home.selection} tableSource={home.table}/>
+                <HomeContent tableSource={tableSource} loading={loading} />
             </div>
         );
     }
 }
 
-export default connect(
-    state => ({
-        home: state.home
-    }),
-    homeActions
-)(Home);
+export default Home;
