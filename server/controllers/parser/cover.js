@@ -13,9 +13,12 @@ export default function (page, search, cb) {
       iListNum: 20,
       totalpage: 0,
       page: page || 0,
-      iOrder: 0,
+      iPageYype: 2, // 1:普通分页 2:十页分页模式
+      iOrder: 0, // 排序方式 0:时间倒序 1:人气倒序 11:下载数排序
+      iGender: 0, // 性别 1:男 2:女
+      iRoleSex: 0, // 性别 1:男 2:女
       iSortNumClose: 1,
-      iAMSActivityId: 51991,
+      iAMSActivityId: 51991, // AMS活动号
       _everyRead: true,
       iTypeId: 2,
       iFlowId: 267733,
