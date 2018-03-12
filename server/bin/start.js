@@ -18,12 +18,22 @@ var port = APP_CONF.port;
 var publicPath = path.resolve(__dirname, '../public');
 app.use('/public', express.static(publicPath, { maxAge: '10d' }));
 
-var apiController = require('../controllers/api');
+var apiController = require('../controllers/routes');
 app.use('/api', apiController.getRouter());
 
 app.use('', function(req, res, next) {
   serverRender(req, res);
 });
+
+// export default function(app) {
+//   app.listen(port, function(err) {
+//     if (err) {
+//       console.error(err);
+//     } else {
+//       console.info('==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.', port, port);
+//     }
+//   });
+// }
 
 var server = app.listen(port, function(err) {
   if (err) {

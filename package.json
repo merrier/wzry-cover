@@ -1,4 +1,25 @@
 {
+  "name": "wzry-cover",
+  "version": "1.0.0",
+  "description": "wzry cover downloader",
+  "engines": {
+    "node": "8.1.3"
+  },
+  "author": "wangcong.merrier",
+  "keywords": [
+    "wzry",
+    "cover",
+    "nodejs",
+    "antd"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/merrier/wzry-cover.git"
+  },
+  "bugs": {
+    "url": "https://github.com/merrier/wzry-cover/issues"
+  },
+  "homepage": "https://github.com/alfg/overwatch-api",
   "dependencies": {
     "body-parser": "^1.15.2",
     "classnames": "^2.2.5",
@@ -16,10 +37,12 @@
     "lodash": "^4.17.4",
     "log4js": "^1.1.0",
     "moment": "^2.17.1",
-    "raven": "^2.1.1",
+    "node-cache": "^4.1.1",
     "request": "^2.79.0",
+    "request-promise": "^4.2.2",
     "retry": "^0.10.1",
     "serve-favicon": "^2.3.2",
+    "srv-cli": "^0.3.5",
     "xlsx": "^0.11.2"
   },
   "devDependencies": {
@@ -50,7 +73,6 @@
     "npm-run-all": "^3.1.2",
     "postcss-loader": "^1.2.0",
     "prop-types": "^15.5.10",
-    "raven-js": "^3.17.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.8",
@@ -83,7 +105,7 @@
       }
     },
     "start-dev": {
-      "command": "node ./server/bin/start.js",
+      "command": "node node_modules/srv-cli/build/srv ./server/bin/start.js",
       "env": {
         "NODE_ENV": "development"
       }
@@ -101,10 +123,5 @@
       }
     }
   },
-  "name": "wzry-cover",
-  "version": "1.0.0",
-  "description": "wzry cover downloader",
-  "author": "wangcong.merrier",
-  "keywords": ["wzry", "cover", "nodejs", "antd"],
   "license": "MIT"
 }

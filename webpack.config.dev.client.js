@@ -62,13 +62,15 @@ module.exports = function (env) {
                 }
             }, {
                 test: require.resolve('prop-types'),
-                loader: 'expose-loader?PropTypes'
+                loader: 'expose-loader?PropTypes',
+                exclude: /node_modules/
             }, {
                 test: /\.css$/,
-                use: extractCSS.extract(['css-loader?minimize', 'postcss-loader'])
+                use: extractCSS.extract(['css-loader?minimize', 'postcss-loader']),
+                exclude: /node_modules/
             }, {
                 test: /\.less$/i,
-                use: extractLESS.extract(['css-loader?minimize', 'less-loader'])
+                use: extractLESS.extract(['css-loader?minimize', 'less-loader']),
             }, {
                 test: /\.(png|jpe?g|gif|eot|svg|ttf|woff|woff2)\??.*$/,
                 use: [{
