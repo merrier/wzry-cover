@@ -1,10 +1,10 @@
 {
   "development": {
-    "port": 8804,
+    "port": 8706,
     "log4js": false
   },
   "production": {
-    "port": 8804,
+    "port": 8706,
     "log4js": {
       "replaceConsole": true
     }
