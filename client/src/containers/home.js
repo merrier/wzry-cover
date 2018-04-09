@@ -20,7 +20,30 @@ class Home extends Component {
                 },
             },
             heroList: [],
+            selectionList: [{
+                type: 'radio',
+                text: '排序方式',
+                dataIndex: 'iOrder',
+                width: 120,
+                options: [0, 1, 11],
+            }, {
+                type: 'radio',
+                text: '人物性别',
+                dataIndex: 'iGender',
+                width: 90,
+                options: [999, 1, 2],
+            }, {
+                type: 'radio',
+                text: '角色性别',
+                dataIndex: 'iRoleSex',
+                width: 90,
+                options: [999, 1, 2],
+            }]
         }
+    }
+
+    componentWillMount() {
+        this.fetchTableSource();
     }
 
     // 添加英雄名称和皮肤名称字段
@@ -42,7 +65,7 @@ class Home extends Component {
     }
 
     // 封面图信息
-    fetchTableSource = async (query) => {
+    fetchTableSource = async (query = {}) => {
 
         this.setState({
             loading: true,
@@ -55,9 +78,7 @@ class Home extends Component {
                     heroList,
                 })
             }
-            const coverJson = await utils.requestFetch('/api/cover/', false, {...(query ? {
-                page: query.current - 1,
-            }:{})});
+            const coverJson = await utils.requestFetch('/api/cover/', false, {...query});
 
             console.log('coverJson', coverJson);
 
@@ -66,7 +87,7 @@ class Home extends Component {
                     tableSource: this.formatCoverList(coverJson.List, this.state.heroList),
                     pagination: {
                         ...this.state.pagination,
-                        current: query && query.current ? query.current : 1,
+                        current: query && query.page ? query.page + 1 : 1,
                         total: + coverJson.iTotalLines,
                     }
                 })
@@ -77,22 +98,25 @@ class Home extends Component {
         });
     }
 
-
-    componentWillMount() {
-        this.fetchTableSource();
+    // 搜索英雄/皮肤名称
+    onSearch = (value) => {
+        // 获取全部数据
+        if(value === ''){
+            this.fetchTableSource();
+        } else {
+            this.fetchTableSource({
+                SearchValue: value,
+            })
+        }
     }
 
     render() {
-        let { tableSource, loading, heroNameList, pagination } = this.state;
-
         return (
             <div className="home-container">
                 <HomeContent
-                    tableSource={tableSource}
-                    loading={loading}
-                    heroNameList={heroNameList}
-                    pagination={pagination}
+                    {...this.state}
                     fetchTableSource={this.fetchTableSource}
+                    onSearch={this.onSearch}
                 />
             </div>
         );

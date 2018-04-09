@@ -9,21 +9,25 @@ function getHomeTableSource(req, res) {
     console.log(query);
 
     const page = query.page;
-    const search = query.search || '';
+    const SearchValue = query.SearchValue || '';
+    const iOrder = query.iOrder || '';
+    const iGender = query.iGender || '';
+    const iRoleSex = query.iRoleSex || '';
 
-    const cacheKey = `cover_${page}_${search}`;
+    const cacheKey = `cover_${page}_${SearchValue}_${iOrder}_${iGender}_${iRoleSex}`;
     const timeout = 60 * 5; // 5 minutes.
+
+    function getCover(callback) {
+        parse(query, (data) => {
+            console.log('query', query);
+            callback(data);
+        });
+    }
 
     cache.getOrSet(cacheKey, timeout, getCover, function (data) {
 
         res.json(data);
     });
-
-    function getCover(callback) {
-        parse(query, (data) => {
-            callback(data);
-        });
-    }
 }
 
 

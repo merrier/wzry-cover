@@ -45,6 +45,14 @@ h3 {
     max-height: 100%;
 }
 
+.cf() {
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
 .clearfix:after {
     visibility: hidden;
     display: block;

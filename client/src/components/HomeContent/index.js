@@ -5,7 +5,10 @@ import SelectTags from 'components/SelectTags/index';
 import SelectCascade from 'components/SelectCascade/index';
 import ExportButton from 'components/ExportButton/index';
 
-import { Table, Form, Divider, Button } from 'antd';
+import { Table, Form, Divider, Button, Input } from 'antd';
+
+const Search = Input.Search;
+const FormItem = Form.Item;
 
 require('./index.less');
 
@@ -16,8 +19,8 @@ class HomeContent extends Component {
         this.state = {
             loading: props.loading,
             tableSource: props.tableSource,
-            filteredInfo: null,
-            sortedInfo: null,
+            filteredInfo: {},
+            sortedInfo: {},
             selectedRowKeys: [],
             pagination: props.pagination,
         };
@@ -34,33 +37,26 @@ class HomeContent extends Component {
     }
 
     handleTableChange = (pagination, filters, sorter) => {        
-        this.setState({
-          filteredInfo: filters,
-          sortedInfo: sorter,
-        });
+        // this.setState({
+        //     filteredInfo: filters,
+        //     sortedInfo: sorter,
+        // });
         if (this.props.pagination.current !== pagination.current) {
             this.props.fetchTableSource({
-                current: pagination.current,
+                page: pagination.current - 1,
             })
         }
     };
 
-    // handleChange = (type, dataIndex, value) => {
-
-    //     switch (type) {
-    //         case 'radio':
-    //             this.setState({
-    //                 filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: [value] })
-    //             });
-    //             break;
-    //         case 'cascade':
-    //         case 'tags':
-    //             this.setState({
-    //                 filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value })
-    //             });
-    //             break;
-    //     }
-    // };
+    // 筛选框
+    handleFilterChange = (type, dataIndex, value) => {
+        console.log('filter-change', dataIndex, value);
+        this.setState({
+            filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value }),
+        }, () => {
+            this.props.fetchTableSource(this.state.filteredInfo);
+        });
+    };
 
     onSelectChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
@@ -92,7 +88,7 @@ class HomeContent extends Component {
             onChange: this.onSelectChange,
         };
         const hasSelected = selectedRowKeys.length > 0;
-        const { heroNameList } = this.props;
+        const { heroNameList, selectionList } = this.props;
 
         sortedInfo = sortedInfo || {};
         filteredInfo = filteredInfo || {};
@@ -132,50 +128,50 @@ class HomeContent extends Component {
             sortOrder: sortedInfo.columnKey === 'sSkinName' && sortedInfo.order,
         }];
 
-        // const paginationSettings = {
-        //     pageSize: 20,
-        //     // pageSizeOptions: ['10', '15', '20'],
-        //     defaultCurrent: 1,
-        //     size: 'large',
-        //     showTotal: (total) => {
-        //       return `共 ${total} 条数据`;
-        //     },
-        //     // showSizeChanger: true,
-        // };
-
         return (
             <article className="home-content-container">
-                {/* <Form className="content-selection" layout="inline">
+                
+                <div className='home-header' style={{ marginBottom: 16 }}>
 
-                    {data.map(function (item, index) {
-                        switch (item.type) {
-                            case 'radio':
-                                return <SelectRadio datum={item} key={index} handleChange={self.handleChange}/>;
-                                break;
-                            case 'tags':
-                                return <SelectTags datum={item} key={index} handleChange={self.handleChange}/>;
-                                break;
-                            case 'cascade':
-                                return <SelectCascade datum={item} key={index} handleChange={self.handleChange}/>
-                        }
-                    })}
+                    <div className='download-box'>
+                        <Button
+                            type="primary"
+                            onClick={this.start}
+                            disabled={!hasSelected}
+                            loading={loading}
+                        >
+                            下载
+                        </Button>
+                        <span style={{ marginLeft: 8 }}>
+                            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+                        </span>
+                    </div>
 
-                    <ExportButton domClassName="home-content-table" export={this.exportButtonClick}/>
+                    <Form className="content-selection" layout="inline">
 
-                </Form> */}
+                        {selectionList.map(function (item, index) {
+                            switch (item.type) {
+                                case 'radio':
+                                    return <SelectRadio datum={item} key={index} handleChange={self.handleFilterChange}/>;
+                                    break;
+                                case 'tags':
+                                    return <SelectTags datum={item} key={index} handleChange={self.handleFilterChange}/>;
+                                    break;
+                                case 'cascade':
+                                    return <SelectCascade datum={item} key={index} handleChange={self.handleFilterChange}/>;
+                            }
+                        })}
 
-                <div style={{ marginBottom: 16 }}>
-                    <Button
-                        type="primary"
-                        onClick={this.start}
-                        disabled={!hasSelected}
-                        loading={loading}
-                    >
-                        下载
-                    </Button>
-                    <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-                    </span>
+                        {/* <ExportButton domClassName="home-content-table" export={this.exportButtonClick}/> */}
+
+                    </Form>
+
+                    <Search className="search"
+                        placeholder='输入英雄/皮肤名称'
+                        style={{width: 200}}
+                        enterButton
+                        onSearch={ value => this.props.onSearch(value)}
+                    />
                 </div>
 
                 <section className="content-main">

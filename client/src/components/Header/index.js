@@ -37,12 +37,6 @@ class HomeHeader extends Component {
                         <Image className="logo" src={require('static/img/logo.png')} alt="logo"/>
                     </a>
 
-                    <Search className="search"
-                            placeholder='输入您想查询的作者名或mid'
-                            style={{width: 200}}
-                            onSearch={this.searchAuthor}
-                    />
-
                     <div className="user-info">
 
                         <Dropdown overlay={menu}>
