@@ -165,7 +165,6 @@ class HomeContent extends Component {
     }
 
     render() {
-        console.log(this.state);
         let self = this;        
         let { tableSource, loading, selectedRowKeys, filteredInfo, sortedInfo } = this.state;
         const rowSelection = {
@@ -228,7 +227,7 @@ class HomeContent extends Component {
                             下载
                         </Button>
                         <span style={{ marginLeft: 8 }}>
-                            {hasSelected ? `您选择了 ${selectedRowKeys.length} 张` : ''}
+                            {hasSelected ? `已选择 ${selectedRowKeys.length} 张` : ''}
                         </span>
                     </div>
 

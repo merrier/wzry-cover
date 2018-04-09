@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { resolutionList } from 'constants';
+import { resolutionList, cursorEffectText } from 'constants';
 import utils from 'plugins/utils';
 
 import HomeContent from 'components/HomeContent';
@@ -48,6 +48,36 @@ class Home extends Component {
     componentWillMount() {
         this.fetchTableSource();
         this.getResolutionIndex();
+        this.addCursorEffect();
+    }
+
+    // 添加鼠标点击特效
+    addCursorEffect = () => {
+        $("body").click(function(e) {
+            const len = cursorEffectText.length;
+            const text = cursorEffectText[Math.floor(Math.random() * len)];
+            const x = e.pageX;
+            const y = e.pageY;
+
+            const $dom = $("<span/>").text(text);
+            $dom.css({
+                "z-index": 9999,
+                "top": y - 20,
+                "left": x,
+                "position": "absolute",
+                "color": "#ff6651",
+                'font-size': '16px',
+            });
+            $("body").append($dom);
+            $dom.animate({
+                "top": y - 180,
+                "opacity": 0
+            },
+            2000,
+            function() {
+                $dom.remove();
+            });
+        });
     }
 
     // 获取用户当前设备分辨率和封面分辨率是否有重叠

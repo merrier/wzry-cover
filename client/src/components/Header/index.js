@@ -17,6 +17,7 @@ class HomeHeader extends Component {
                     <a href="/">
                         <Image className="logo" src={require('static/img/logo.png')} alt="logo"/>
                     </a>
+                    <h1 className='title'><span>王者荣耀封面下载器</span></h1>
                     <div className="user-info">
                         <Icon type="github"/>
                         <a target='_blank' href='https://github.com/merrier/wzry-cover'>Fork Me</a>

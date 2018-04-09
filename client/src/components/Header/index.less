@@ -4,6 +4,7 @@
   color: #fff;
 
   .home-header-container-content{
+    position: relative;
     width: 960px;
     margin:0 auto;
 
@@ -11,6 +12,41 @@
       float: left;
       height: 45px;
       margin-top: 10px;
+    }
+
+    .title{
+      position: absolute;
+      left: 200px;
+      right: 200px;
+      text-align: center;
+      color: #fab449;
+      font-size: 26px;
+
+      >span{
+        position: relative;
+
+        // 空心字
+        // -webkit-text-fill-color: transparent;  
+        // -webkit-text-stroke: 1px #d6d6d6;  
+        // background: url(http://www.pencilscoop.com/demos/CSS_Text_Effects/images/galaxy.jpg);  
+        // background-size: cover;
+
+        // 遮罩效果
+        // background: url(~static/img/text-effect.jpg) -160px -84px;
+        // -webkit-text-fill-color: transparent;
+        // -webkit-background-clip: text;
+
+        // 蒙版文字动画
+        color: #fff;
+        background: url(~static/img/animated_text_fill.png) repeat-y;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-animation: aitf 80s linear infinite;
+        -webkit-transform: translate3d(0,0,0);
+        -webkit-backface-visibility: hidden;
+      }
+      
     }
 
     .user-info{
@@ -30,4 +66,9 @@
       }
     }
   }
+}
+
+@keyframes aitf {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }

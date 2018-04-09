@@ -37,7 +37,13 @@ const constants = {
     }, {
         width: 1920,
         height: 1440,
-    }]
+    }],
+    // cursorEffectText: ["天真","富强", "民主", "文明", "和谐", "自由", "平等", "公正" ,"法治", "爱国", "敬业", "诚信", "友善"],
+    cursorEffectText: [
+        '一篇诗，一斗酒，一曲长歌，一剑天涯。',
+        '风会带走你曾经存在过的证明。',
+        
+    ],
 }
 
 export default constants;
