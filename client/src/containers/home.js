@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import HomeContent from 'components/HomeContent';
 
+import { resolutionList } from 'constants';
 import utils from 'plugins/utils';
+
+import HomeContent from 'components/HomeContent';
 
 class Home extends Component {
 
@@ -38,12 +40,29 @@ class Home extends Component {
                 dataIndex: 'iRoleSex',
                 width: 90,
                 options: [999, 1, 2],
-            }]
+            }],
+            resolutionIndex: null,
         }
     }
 
     componentWillMount() {
         this.fetchTableSource();
+        this.getResolutionIndex();
+    }
+
+    // 获取用户当前设备分辨率和封面分辨率是否有重叠
+    getResolutionIndex = () => {
+        const sWidth = window.screen.width;
+        const sHeight = window.screen.height;
+        for(let i = 0; i < resolutionList.length; i++) {
+            const resolution = resolutionList[i];
+
+            if (sWidth === resolution.width && sHeight === resolution.height) {
+                this.setState({
+                    resolutionIndex: i,
+                });
+            }
+        }
     }
 
     // 添加英雄名称和皮肤名称字段

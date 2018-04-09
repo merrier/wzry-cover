@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 
+import { resolutionList } from 'constants';
+
 import SelectRadio from 'components/SelectRadio/index';
 import SelectTags from 'components/SelectTags/index';
 import SelectCascade from 'components/SelectCascade/index';
 import ExportButton from 'components/ExportButton/index';
 
-import { Table, Form, Divider, Button, Input } from 'antd';
+import { Table, Form, Divider, Button, Input, Modal, Radio, Select, Icon } from 'antd';
 
-const Search = Input.Search;
 const FormItem = Form.Item;
+const Search = Input.Search;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 require('./index.less');
 
@@ -22,7 +27,10 @@ class HomeContent extends Component {
             filteredInfo: {},
             sortedInfo: {},
             selectedRowKeys: [],
+            selectedRows: [],
             pagination: props.pagination,
+            modalVisible: false,
+            resolutionIndex: props.resolutionIndex,
         };
     }
 
@@ -36,6 +44,7 @@ class HomeContent extends Component {
         }
     }
 
+    // 分页点击
     handleTableChange = (pagination, filters, sorter) => {        
         // this.setState({
         //     filteredInfo: filters,
@@ -58,29 +67,105 @@ class HomeContent extends Component {
         });
     };
 
-    onSelectChange = (selectedRowKeys) => {
-        this.setState({ selectedRowKeys });
+
+    // 表格中多余内容
+    genExpandedRow = (record) => {
+        if (!record) {
+            return null;
+        } else {
+            const domList = [];
+            for(let i = 0; i < resolutionList.length; i++) {
+                const resolution = resolutionList[i];
+
+                const item = ( i !== resolutionList.length - 1
+                    ? <span key={i}>
+                        <a target='_blank' key={i} href={ record[`sProdImgNo_${i + 2}`].replace('jpg/200', 'jpg/0')}>{`${resolution.width}×${resolution.height}`}</a>
+                        <Divider type="vertical" />
+                    </span>
+                    : <a target='_blank' key={i} href={ record[`sProdImgNo_${i + 2}`].replace('jpg/200', 'jpg/0')}>{`${resolution.width}×${resolution.height}`}</a>
+                )
+
+                domList.push(item);
+            }
+            return domList;
+        }
     }
 
-    genExpandedRow = (record) => {
-        return (<span>
-            <a target='_blank' key={1} href={ record.sProdImgNo_2.replace('jpg/200', 'jpg/0')}>1024×768</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={2} href={ record.sProdImgNo_3.replace('jpg/200', 'jpg/0')}>1280×720</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={3} href={ record.sProdImgNo_4.replace('jpg/200', 'jpg/0')}>1280×1024</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={4} href={ record.sProdImgNo_5.replace('jpg/200', 'jpg/0')}>1440×900</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={5} href={ record.sProdImgNo_6.replace('jpg/200', 'jpg/0')}>1920×1080</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={6} href={ record.sProdImgNo_7.replace('jpg/200', 'jpg/0')}>1920×1200</a>
-            <Divider type="vertical" />
-            <a target='_blank' key={7} href={ record.sProdImgNo_8.replace('jpg/200', 'jpg/0')}>1920×1440</a>
-        </span>)
+    // 选择某一列
+    onSelectChange = (selectedRowKeys, selectedRows) => {
+        console.log('selectedRows', selectedRows);
+        this.setState({
+            selectedRowKeys,
+            selectedRows,
+        });
+    }
+
+    // 渲染下载封面模态框中的选择框
+    renderModalSelect = () => {
+
+        const domList = [];
+        const { resolutionIndex } = this.props;
+        const sWidth = window.screen.width;
+        const sHeight = window.screen.height;
+
+        for(let i = 0; i < resolutionList.length; i++) {
+            const resolution = resolutionList[i];
+
+            const item = (
+                <Option key={i} value={i}>{`${resolution.width}×${resolution.height}`}</Option>
+            )
+            domList.push(item);
+        }
+
+        return (
+            <div className='modal-download'>
+                <Form layout='inline'>
+                    <FormItem label='请选择分辨率'>
+                        <Select 
+                            defaultValue={resolutionIndex === null ? 0 : resolutionIndex}
+                            style={{width: 120}}
+                            onChange={this.handleModalSelectChange}>{domList}
+                        </Select>
+                    </FormItem>
+                </Form>
+                <p>
+                    <Icon type="info-circle" style={{marginRight: 8}}/>
+                    <span>您当前设备的分辨率为<span className='color-red'>{`${sWidth}×${sHeight}`}</span></span>
+                </p>
+            </div>
+        )
+    }
+
+    // 下载封面模态框中的选择框
+    handleModalSelectChange = (value) => {
+        this.setState({
+            resolutionIndex: value,
+        })
+    }
+
+    // 展示下载封面模态框
+    showModal = () => {
+        this.setState({
+            modalVisible: true,
+        });
+    }
+
+    // 下载封面模态框中的确认按钮
+    handleModalOk = (e) => {
+        this.setState({
+          modalVisible: false,
+        });
+    }
+
+    // 下载封面模态框中的取消按钮
+    handleModalCancel = (e) => {
+        this.setState({
+          modalVisible: false,
+        });
     }
 
     render() {
+        console.log(this.state);
         let self = this;        
         let { tableSource, loading, selectedRowKeys, filteredInfo, sortedInfo } = this.state;
         const rowSelection = {
@@ -136,14 +221,14 @@ class HomeContent extends Component {
                     <div className='download-box'>
                         <Button
                             type="primary"
-                            onClick={this.start}
+                            onClick={this.showModal}
                             disabled={!hasSelected}
-                            loading={loading}
+                            // loading={loading}
                         >
                             下载
                         </Button>
                         <span style={{ marginLeft: 8 }}>
-                            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+                            {hasSelected ? `您选择了 ${selectedRowKeys.length} 张` : ''}
                         </span>
                     </div>
 
@@ -194,6 +279,18 @@ class HomeContent extends Component {
                     />
 
                 </section>
+
+                <Modal
+                    title="下载封面"
+                    wrapClassName="vertical-center-modal"
+                    visible={this.state.modalVisible}
+                    onOk={this.handleModalOk}
+                    onCancel={this.handleModalCancel}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    {this.renderModalSelect()}
+                </Modal>
             </article>
         )
     }
