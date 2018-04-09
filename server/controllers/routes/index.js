@@ -1,13 +1,13 @@
 var express = require('express');
-var homeSub = require('./home');
 var coverSub = require('./cover');
+var herolistSub = require('./herolist');
 
 module.exports = {
     getRouter: function () {
         var router = express.Router();
         router
-            .use('/home', homeSub.getRouter())
-            .use('/cover', coverSub.getRouter());
+            .use('/cover', coverSub.getRouter())
+            .use('/herolist', herolistSub.getRouter());
         return router;
     }
 };

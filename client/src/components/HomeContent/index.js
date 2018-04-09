@@ -16,8 +16,10 @@ class HomeContent extends Component {
         this.state = {
             loading: props.loading,
             tableSource: props.tableSource,
-            filteredInfo: {},
-            selectedRowKeys: [], // Check here to configure the default column
+            filteredInfo: null,
+            sortedInfo: null,
+            selectedRowKeys: [],
+            pagination: props.pagination,
         };
     }
 
@@ -26,32 +28,39 @@ class HomeContent extends Component {
             this.setState({
                 loading: nextProps.loading,
                 tableSource: nextProps.tableSource,
+                pagination: nextProps.pagination,
             });
         }
     }
 
-    handleChange = (type, dataIndex, value) => {
-
-        if (this.state.filteredInfo === null) {
-            this.setState({
-                filteredInfo: {},
+    handleTableChange = (pagination, filters, sorter) => {        
+        this.setState({
+          filteredInfo: filters,
+          sortedInfo: sorter,
+        });
+        if (this.props.pagination.current !== pagination.current) {
+            this.props.fetchTableSource({
+                current: pagination.current,
             })
         }
-
-        switch (type) {
-            case 'radio':
-                this.setState({
-                    filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: [value] })
-                });
-                break;
-            case 'cascade':
-            case 'tags':
-                this.setState({
-                    filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value })
-                });
-                break;
-        }
     };
+
+    // handleChange = (type, dataIndex, value) => {
+
+    //     switch (type) {
+    //         case 'radio':
+    //             this.setState({
+    //                 filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: [value] })
+    //             });
+    //             break;
+    //         case 'cascade':
+    //         case 'tags':
+    //             this.setState({
+    //                 filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value })
+    //             });
+    //             break;
+    //     }
+    // };
 
     onSelectChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
@@ -59,33 +68,34 @@ class HomeContent extends Component {
 
     genExpandedRow = (record) => {
         return (<span>
-            <a target='_blank' key={1} href={decodeURIComponent(record.sProdImgNo_2).replace('jpg/200', 'jpg/0')}>1024×768</a>
+            <a target='_blank' key={1} href={ record.sProdImgNo_2.replace('jpg/200', 'jpg/0')}>1024×768</a>
             <Divider type="vertical" />
-            <a target='_blank' key={2} href={decodeURIComponent(record.sProdImgNo_3).replace('jpg/200', 'jpg/0')}>1280×720</a>
+            <a target='_blank' key={2} href={ record.sProdImgNo_3.replace('jpg/200', 'jpg/0')}>1280×720</a>
             <Divider type="vertical" />
-            <a target='_blank' key={3} href={decodeURIComponent(record.sProdImgNo_4).replace('jpg/200', 'jpg/0')}>1280×1024</a>
+            <a target='_blank' key={3} href={ record.sProdImgNo_4.replace('jpg/200', 'jpg/0')}>1280×1024</a>
             <Divider type="vertical" />
-            <a target='_blank' key={4} href={decodeURIComponent(record.sProdImgNo_5).replace('jpg/200', 'jpg/0')}>1440×900</a>
+            <a target='_blank' key={4} href={ record.sProdImgNo_5.replace('jpg/200', 'jpg/0')}>1440×900</a>
             <Divider type="vertical" />
-            <a target='_blank' key={5} href={decodeURIComponent(record.sProdImgNo_6).replace('jpg/200', 'jpg/0')}>1920×1080</a>
+            <a target='_blank' key={5} href={ record.sProdImgNo_6.replace('jpg/200', 'jpg/0')}>1920×1080</a>
             <Divider type="vertical" />
-            <a target='_blank' key={6} href={decodeURIComponent(record.sProdImgNo_7).replace('jpg/200', 'jpg/0')}>1920×1200</a>
+            <a target='_blank' key={6} href={ record.sProdImgNo_7.replace('jpg/200', 'jpg/0')}>1920×1200</a>
             <Divider type="vertical" />
-            <a target='_blank' key={7} href={decodeURIComponent(record.sProdImgNo_8).replace('jpg/200', 'jpg/0')}>1920×1440</a>
+            <a target='_blank' key={7} href={ record.sProdImgNo_8.replace('jpg/200', 'jpg/0')}>1920×1440</a>
         </span>)
     }
 
     render() {
-        let { tableSource, loading, selectedRowKeys } = this.state;
+        let self = this;        
+        let { tableSource, loading, selectedRowKeys, filteredInfo, sortedInfo } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
         const hasSelected = selectedRowKeys.length > 0;
+        const { heroNameList } = this.props;
 
-        let self = this;
-
-        console.log('tableSource', tableSource);
+        sortedInfo = sortedInfo || {};
+        filteredInfo = filteredInfo || {};
 
         const columns = [{
             title: '封面图',
@@ -93,57 +103,45 @@ class HomeContent extends Component {
             width: 160,
             // filteredValue: filteredInfo.platform || null,
             render: (text, record) => {
-                const name = decodeURIComponent(record.sProdName);
-                return <img className='thumb' title={name} alt={name} src={decodeURIComponent(text)} />;
+                const name = record.sProdName;
+                return <img className='thumb' title={name} alt={name} src={text} />;
             }
         }, {
             title: '发布时间',
             dataIndex: 'dtInputDT',
             width: 140,
-            render: (text) => {
-                return decodeURIComponent(text);
-            }
+            sorter: (a, b) => {
+                return (new Date(a.dtInputDT.replace(/-/g, '/')).getTime() - new Date(b.dtInputDT.replace(/-/g, '/')).getTime())
+            },
+            sortOrder: sortedInfo.columnKey === 'dtInputDT' && sortedInfo.order,
         }, {
             title: '英雄名称',
             dataIndex: 'sHeroName',
             width: 160,
-            render: (text, record) => {
-                return decodeURIComponent(record.sProdName).split('-')[0];
-            }
+            sorter: (a, b) => {
+                return a.sHeroName > b.sHeroName;
+            },
+            sortOrder: sortedInfo.columnKey === 'sHeroName' && sortedInfo.order,
         }, {
             title: '皮肤名称',
             dataIndex: 'sSkinName',
             width: 160,
-            render: (text, record) => {
-                return decodeURIComponent(record.sProdName).split('-')[1];
-            }
-        },
-            // {
-            //     title: '查看',
-            //     dataIndex: 'sProdImgNo',
-            //     // width: 450,
-            //     // filteredValue: filteredInfo.category || null,
-            //     render: (text, record) => {
-            //         return(<span>
-            //             <a target='_blank' key={1} href={decodeURIComponent(record.sProdImgNo_1)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={2} href={decodeURIComponent(record.sProdImgNo_2)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={3} href={decodeURIComponent(record.sProdImgNo_3)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={4} href={decodeURIComponent(record.sProdImgNo_4)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={5} href={decodeURIComponent(record.sProdImgNo_5)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={6} href={decodeURIComponent(record.sProdImgNo_6)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={7} href={decodeURIComponent(record.sProdImgNo_7)}>1920×1240</a>
-            //             <Divider type="vertical" />
-            //             <a target='_blank' key={8} href={decodeURIComponent(record.sProdImgNo_8)}>1920×1240</a>
-            //         </span>)
-            //     }
-            // }
-        ];
+            sorter: (a, b) => {
+                return a.sSkinName > b.sSkinName;
+            },
+            sortOrder: sortedInfo.columnKey === 'sSkinName' && sortedInfo.order,
+        }];
+
+        // const paginationSettings = {
+        //     pageSize: 20,
+        //     // pageSizeOptions: ['10', '15', '20'],
+        //     defaultCurrent: 1,
+        //     size: 'large',
+        //     showTotal: (total) => {
+        //       return `共 ${total} 条数据`;
+        //     },
+        //     // showSizeChanger: true,
+        // };
 
         return (
             <article className="home-content-container">
@@ -185,14 +183,15 @@ class HomeContent extends Component {
                     <Table
                         className="home-content-table"
                         size='middle'
-                        pagination={false}
+                        pagination={this.props.pagination}
                         rowSelection={rowSelection}
                         columns={columns}
                         rowKey={record => record.iProdId}
                         loading={loading}
                         dataSource={tableSource}
+                        onChange={this.handleTableChange}
                         expandedRowRender={record => <div style={{ margin: 0 }}>{this.genExpandedRow(record)}</div>}
-                        scroll={{ y: 'calc(100vh - 200px)' }}
+                        scroll={{ y: 'calc(100vh - 265px)' }}
                         locale={{
                             emptyText: '暂无数据',
                         }}

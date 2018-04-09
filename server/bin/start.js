@@ -42,3 +42,5 @@ var server = app.listen(port, function(err) {
     console.info('==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.', port, port);
   }
 });
+
+export default function(app){};
