@@ -6,8 +6,6 @@ import cache from '../cache';
 
 function getHomeTableSource(req, res) {
     const query = req.query;
-    console.log(query);
-
     const page = query.page;
     const SearchValue = query.SearchValue || '';
     const iOrder = query.iOrder || '';
@@ -19,7 +17,6 @@ function getHomeTableSource(req, res) {
 
     function getCover(callback) {
         parse(query, (data) => {
-            console.log('query', query);
             callback(data);
         });
     }

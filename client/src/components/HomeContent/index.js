@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 
 import { resolutionList } from 'constants';
 
+import utils from 'plugins/utils';
+
 import SelectRadio from 'components/SelectRadio/index';
 import SelectTags from 'components/SelectTags/index';
 import SelectCascade from 'components/SelectCascade/index';
 import ExportButton from 'components/ExportButton/index';
 
-import { Table, Form, Divider, Button, Input, Modal, Radio, Select, Icon } from 'antd';
+import { Table, Form, Divider, Button, Input, Modal, Radio, Select, Icon, message } from 'antd';
 
 const FormItem = Form.Item;
 const Search = Input.Search;
@@ -150,11 +152,34 @@ class HomeContent extends Component {
         });
     }
 
-    // 下载封面模态框中的确认按钮
-    handleModalOk = (e) => {
-        this.setState({
-          modalVisible: false,
+    // 从selectedRows中提取出需要下载的图片地址列表
+    formatImgList = (rows, index = 0) => {
+        const resolution = resolutionList[index];
+        const imgList = rows.map(item => {
+            return {
+                name: `${item.sHeroName}-${item.sSkinName}`,
+                uri: item[`sProdImgNo_${index + 2}`].replace('jpg/200', 'jpg/0'),
+            }
         });
+        return {
+            resolution,
+            imgList,
+        }
+    }
+
+    // 下载封面模态框中的确认按钮
+    handleModalOk = async () => {
+
+        // const queryObj = this.formatImgList(this.state.selectedRows, this.state.resolutionIndex);
+
+        // const json = await utils.requestFetch('/api/download/', true, queryObj);
+
+        // console.log('download', json);
+
+        message.info('开发中，敬请期待...');
+        // this.setState({
+        //   modalVisible: false,
+        // });
     }
 
     // 下载封面模态框中的取消按钮
@@ -271,7 +296,7 @@ class HomeContent extends Component {
                         dataSource={tableSource}
                         onChange={this.handleTableChange}
                         expandedRowRender={record => <div style={{ margin: 0 }}>{this.genExpandedRow(record)}</div>}
-                        scroll={{ y: 'calc(100vh - 265px)' }}
+                        scroll={{ y: 'calc(100vh - 270px)' }}
                         locale={{
                             emptyText: '暂无数据',
                         }}

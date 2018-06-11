@@ -59,6 +59,7 @@ export default function (query, cb) {
   rp(options).then((res) => {
 
     const json = parseResponse(res);
+    console.log(json);
 
     cb(json);
   }).catch(err => {

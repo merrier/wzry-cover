@@ -19,8 +19,9 @@
   "bugs": {
     "url": "https://github.com/merrier/wzry-cover/issues"
   },
-  "homepage": "https://github.com/alfg/overwatch-api",
+  "homepage": "https://github.com/merrier/wzry-cover",
   "dependencies": {
+    "bagpipe": "^0.3.5",
     "body-parser": "^1.15.2",
     "classnames": "^2.2.5",
     "compression": "^1.6.2",
@@ -39,11 +40,13 @@
     "log4js": "^1.1.0",
     "moment": "^2.17.1",
     "node-cache": "^4.1.1",
+    "phantomjs-prebuilt": "^2.1.16",
     "request": "^2.79.0",
     "request-promise": "^4.2.2",
     "retry": "^0.10.1",
     "serve-favicon": "^2.3.2",
     "srv-cli": "^0.3.5",
+    "svgexport": "^0.3.2",
     "xlsx": "^0.11.2"
   },
   "devDependencies": {
@@ -71,6 +74,7 @@
     "html-webpack-plugin": "^2.24.1",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
+    "nodemon": "^1.17.3",
     "npm-run-all": "^3.1.2",
     "postcss-loader": "^1.2.0",
     "prop-types": "^15.5.10",

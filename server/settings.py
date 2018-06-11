@@ -1,6 +1,0 @@
-APP_TYPE = "binary"
-PRODUCT = "toutiao"
-SUBSYS  = "fe"
-MODULE  = "valexa"
-APPEXECRELOAD = "pm2 restart valexa"
-APPEXECSTOP = "pm2 stop valexa"
