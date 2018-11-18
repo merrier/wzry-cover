@@ -1,8 +1,8 @@
 var express = require('express');
 const asyncWrapper = require('../../middleware').middleware.asyncWrapper;
 
-import parse from '../parser/cover';
-import cache from '../cache';
+var parse = require('../parser/cover');
+var cache = require('../cache');
 
 function getHomeTableSource(req, res) {
     const query = req.query;

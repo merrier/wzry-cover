@@ -1,7 +1,7 @@
 var express = require('express');
-var Bagpipe=require('bagpipe');
-var request=require('request');
-var fs=require('fs');
+var Bagpipe = require('bagpipe');
+var request = require('request');
+var fs = require('fs');
 const asyncWrapper = require('../../middleware').middleware.asyncWrapper;
 
 
@@ -14,12 +14,12 @@ var downloadPic=function(src, dest){
             fs.mkdirSync(__dirname + dest.replace('.', ''), function (err) {
                 if(err)
                 throw err;
-                console.log('创建目录成功');
+                // console.log('创建目录成功');
             });
         }
     });
     request(src).pipe(fs.createWriteStream(dest)).on('close',function(){
-        console.log('pic saved');
+        // console.log('pic saved');
     })
 };
 
@@ -37,7 +37,7 @@ function downloadImages (req, res) {
 
         bagpipe.push( downloadPic , imgList[i], './wzry-cover/'+ imgList[i].name +'.jpg', function(err,data){
             var end=(new Date()).getTime();
-            console.log('下载花费时间:'+(end-start));
+            // console.log('下载花费时间:'+(end-start));
             res.json({
                 message: 'success',
                 spend: end-start,

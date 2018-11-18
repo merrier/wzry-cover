@@ -1,7 +1,6 @@
-import rp from 'request-promise';
-import request from 'request';
+var rp = require('request-promise');
 
-export default function (query, cb) {
+module.exports = function (query, cb) {
 
   const options = {
     uri: 'http://apps.game.qq.com/cgi-bin/ams/module/ishow/V1.0/query/workList_inc.cgi',
@@ -59,8 +58,6 @@ export default function (query, cb) {
   rp(options).then((res) => {
 
     const json = parseResponse(res);
-    console.log(json);
-
     cb(json);
   }).catch(err => {
     cb(err);

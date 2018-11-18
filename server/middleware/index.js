@@ -33,7 +33,6 @@ function setupMiddleware(app) {
     });
 
     var hotMiddleware = require('webpack-hot-middleware')(compiler);
-    // force page reload when html-webpack-plugin template changes
     compiler.plugin('compilation', function(compilation) {
       compilation.plugin('html-webpack-plugin-after-emit', function(data, cb) {
         hotMiddleware.publish({ action: 'reload' });
@@ -50,10 +49,6 @@ function setupMiddleware(app) {
     app.set('view engine', 'ejs');
     app.use('/static', express.static(path.resolve(__dirname, '../../client/dist'), { maxAge: '10d' })); // can be removed when send dist to CDN
     
-    // 为了方便新版chrome调试先隐藏掉，以后流量进来再考虑打开
-    // app.use(hsts({
-    //   force: true
-    // }));
   }
 
 

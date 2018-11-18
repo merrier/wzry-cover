@@ -1,8 +1,8 @@
 var express = require('express');
 const asyncWrapper = require('../../middleware').middleware.asyncWrapper;
 
-import parse from '../parser/herolist';
-import cache from '../cache';
+var parse = require('../parser/herolist');
+var cache = require('../cache');
 
 function getHeroList(req, res) {
 

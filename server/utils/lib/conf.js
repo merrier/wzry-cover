@@ -1,5 +1,5 @@
 var nodeEnv = process.env.NODE_ENV || 'development';
-var appJSON = require('../../conf/app.json');
+var appJSON = require('../../apps.json');
 
 var start = false;
 
@@ -8,6 +8,6 @@ module.exports = {
     env = env || nodeEnv || 'development';
     !start && console.log('Environment ===> ', env);
     start = true;
-    return appJSON[env];
+    return appJSON;
   }
 };

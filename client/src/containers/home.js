@@ -122,14 +122,11 @@ class Home extends Component {
             if ( this.state.heroList.length === 0 ) {
                 // 首先获取英雄列表
                 const heroList = await utils.requestFetch('/api/herolist/', false);
-                console.log('heroList', heroList);
                 this.setState({
                     heroList,
                 })
             }
             const coverJson = await utils.requestFetch('/api/cover/', false, {...query});
-
-            console.log('coverJson', coverJson);
 
             if (coverJson && coverJson.sMsg === 'Successful') {
                 this.setState({

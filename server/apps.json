@@ -1,18 +1,15 @@
 {
-  "apps": [{
-    "name": "valexa",
-    "script": "./bin/start.js",
+    "name": "wzry-cover",
+    "script": "./server/bin/start.js",
     "log_date_format": "YYYY-MM-DD HH:mm Z",
-    "out_file": "pm2-valexa-out.log",
-    "error_file": "pm2-valexa-err.log",
-    "pid_file": "pm2-valexa.pid",
+    "out_file": "./logs/pm2-wzry-cover-out.log",
+    "error_file": "./logs/pm2-wzry-cover-err.log",
+    "pid_file": "./logs/pm2-wzry-cover.pid",
     "ignoreWatch": ["[\\/\\\\]\\./", "node_modules"],
     "watch": "false",
     "kill_timeout" : 3000,
-    "exec_mode": "fork_mode", //cluster_mode
     "env": {
       "NODE_ENV": "production",
-      "PORT": 8804
+      "PORT": 8706
     }
-  }]
 }

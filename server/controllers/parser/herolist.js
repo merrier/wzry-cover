@@ -1,7 +1,6 @@
-import rp from 'request-promise';
-import request from 'request';
+var rp = require('request-promise');
 
-export default function (cb) {
+module.exports = function (cb) {
 
   const options = {
     uri: 'http://pvp.qq.com/web201605/js/herolist.json',

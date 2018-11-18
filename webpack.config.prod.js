@@ -23,9 +23,13 @@ module.exports = function (env) {
     output: {
       filename: '[name].[chunkhash].js',
       path: path.resolve(__dirname, './client/dist/'),
-      publicPath: '//s3a.pstatp.com/toutiao/valexa/dist/' // change to /static/ for local test
+      publicPath: '/static/'
     },
     plugins: [
+      new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+      }),
       new webpack.DefinePlugin({
         __DEV_CLIENT__: false,
         __DEV_SERVER__: false,
@@ -61,8 +65,6 @@ module.exports = function (env) {
         filename: '../../server/views/index.ejs',
         inject: 'body',
         htmlContent: '<%- __html__ %>',
-        initialData: 'window.__INITIAL_STATE__ = <%- __state__ %>',
-        user: 'window.__USER__ = <%- __user__ %>',
         hash: false,
         minify: {
           removeComments: false,

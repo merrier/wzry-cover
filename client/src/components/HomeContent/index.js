@@ -61,7 +61,6 @@ class HomeContent extends Component {
 
     // 筛选框
     handleFilterChange = (type, dataIndex, value) => {
-        console.log('filter-change', dataIndex, value);
         this.setState({
             filteredInfo: Object.assign(this.state.filteredInfo, { [dataIndex]: value }),
         }, () => {
@@ -95,7 +94,6 @@ class HomeContent extends Component {
 
     // 选择某一列
     onSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log('selectedRows', selectedRows);
         this.setState({
             selectedRowKeys,
             selectedRows,
