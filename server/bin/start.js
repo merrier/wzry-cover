@@ -1,27 +1,27 @@
-var express = require('express');
-var path = require('path');
-var serverRender = require('../../server/render/src/render');
-var utils = require('../utils');
-var setupMiddleware = require('../middleware');
-var APP_CONF = utils.conf.getAppConf();
+const express = require('express');
+const path = require('path');
+const serverRender = require('../render/src/render');
+const utils = require('../utils');
+const setupMiddleware = require('../middleware');
+const APP_CONF = utils.conf.getAppConf();
 
-var app = express();
+const app = express();
 app.disable('x-powered-by');
 setupMiddleware(app);
 
-var port = APP_CONF.env.PORT;
+const port = APP_CONF.env.PORT;
 
-var publicPath = path.resolve(__dirname, '../public');
-app.use('/public', express.static(publicPath, { maxAge: '10d' }));
+// var publicPath = path.resolve(__dirname, '../public');
+// app.use('/public', express.static(publicPath, { maxAge: '10d' }));
 
-var apiController = require('../controllers/routes');
+const apiController = require('../controllers/routes');
 app.use('/api', apiController.getRouter());
 
 app.use('', function(req, res, next) {
   serverRender(req, res);
 });
 
-var server = app.listen(port, function(err) {
+const server = app.listen(port, function(err) {
   if (err) {
     console.error(err);
   } else {

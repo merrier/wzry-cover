@@ -16,7 +16,7 @@ function getHomeTableSource(req, res) {
     const timeout = 60 * 5; // 5 minutes.
 
     function getCover(callback) {
-        parse(query, (data) => {
+        parse(query, data => {
             callback(data);
         });
     }

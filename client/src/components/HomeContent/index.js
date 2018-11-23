@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-
 import { resolutionList } from 'constants';
-
+import saveAs from 'file-saver';
 import utils from 'plugins/utils';
 
 import SelectRadio from 'components/SelectRadio/index';
 import SelectTags from 'components/SelectTags/index';
 import SelectCascade from 'components/SelectCascade/index';
-import ExportButton from 'components/ExportButton/index';
+
+import { downloadImage, getImageBlob } from 'plugins/utils';
 
 import { Table, Form, Divider, Button, Input, Modal, Radio, Select, Icon, message } from 'antd';
 
@@ -48,10 +48,6 @@ class HomeContent extends Component {
 
     // 分页点击
     handleTableChange = (pagination, filters, sorter) => {        
-        // this.setState({
-        //     filteredInfo: filters,
-        //     sortedInfo: sorter,
-        // });
         if (this.props.pagination.current !== pagination.current) {
             this.props.fetchTableSource({
                 page: pagination.current - 1,
@@ -168,15 +164,27 @@ class HomeContent extends Component {
     // 下载封面模态框中的确认按钮
     handleModalOk = async () => {
 
-        // const queryObj = this.formatImgList(this.state.selectedRows, this.state.resolutionIndex);
+        const { resolution, imgList } = this.formatImgList(this.state.selectedRows, this.state.resolutionIndex);
 
-        // const json = await utils.requestFetch('/api/download/', true, queryObj);
-
-        // console.log('download', json);
-
+        // saveAs(imgList[0].uri, "image.jpg");
+        // const result = encodeRemoteImage(imgList[0]);
+        // console.log('result------', result);
         message.info('开发中，敬请期待...');
-        // this.setState({
-        //   modalVisible: false,
+
+
+        // const imgJson = await utils.requestFetch('/api/image/', true, {
+        //     uri: imgList[0].uri,
+        // });
+
+        // if (imgJson) {
+        //     console.log(imgJson);
+        // }
+
+        // downloadImage(imgList[0].uri);
+
+
+        // getImageBlob(imgList[0].uri, function(res) {
+        //     console.log('res======', res);
         // });
     }
 
@@ -213,27 +221,19 @@ class HomeContent extends Component {
             title: '发布时间',
             dataIndex: 'dtInputDT',
             width: 140,
-            sorter: (a, b) => {
-                return (new Date(a.dtInputDT.replace(/-/g, '/')).getTime() - new Date(b.dtInputDT.replace(/-/g, '/')).getTime())
-            },
-            sortOrder: sortedInfo.columnKey === 'dtInputDT' && sortedInfo.order,
+            
         }, {
             title: '英雄名称',
             dataIndex: 'sHeroName',
             width: 160,
-            sorter: (a, b) => {
-                return a.sHeroName > b.sHeroName;
-            },
-            sortOrder: sortedInfo.columnKey === 'sHeroName' && sortedInfo.order,
+            
         }, {
             title: '皮肤名称',
             dataIndex: 'sSkinName',
             width: 160,
-            sorter: (a, b) => {
-                return a.sSkinName > b.sSkinName;
-            },
-            sortOrder: sortedInfo.columnKey === 'sSkinName' && sortedInfo.order,
         }];
+
+        console.log('state', this.state);
 
         return (
             <article className="home-content-container">
@@ -268,8 +268,6 @@ class HomeContent extends Component {
                                     return <SelectCascade datum={item} key={index} handleChange={self.handleFilterChange}/>;
                             }
                         })}
-
-                        {/* <ExportButton domClassName="home-content-table" export={this.exportButtonClick}/> */}
 
                     </Form>
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import HeaderCon from 'components/Header/index';
+import HeaderCon from 'components/Header';
 import {Layout} from 'antd';
 
 const {Header, Content} = Layout;

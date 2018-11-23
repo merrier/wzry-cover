@@ -1,7 +1,5 @@
-var conf = require('./lib/conf');
-var http = require('./lib/http');
+var conf = require('./conf');
 
 module.exports = {
   conf: conf,
-  http: http,
 };

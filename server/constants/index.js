@@ -1,9 +1,0 @@
-const THROUGHPUT_SUFFIX = '.throughput';
-const LATENCY_SUFFIX = '.latency';
-const ERROR_SUFFIX = '.error';
-
-module.exports = {
-  THROUGHPUT_SUFFIX: THROUGHPUT_SUFFIX,
-  LATENCY_SUFFIX: LATENCY_SUFFIX,
-  ERROR_SUFFIX: ERROR_SUFFIX,
-};
