@@ -20,9 +20,11 @@
 ## TODO
 
 * redux
-* 下载封面
+* 下载封面(https://juejin.im/post/5c46b58cf265da617265c876)
 * 可手动取消`鼠标点击随机出现英雄台词`这一功能
 * 屏幕分辨率可多选
+* 结合jszip：https://stuk.github.io/jszip/
+* 结合file-saver：https://github.com/eligrey/FileSaver.js
 
 ## License
 

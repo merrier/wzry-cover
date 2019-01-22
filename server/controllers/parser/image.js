@@ -24,6 +24,11 @@ module.exports = function (body, cb) {
 
   rp(options).then((res) => {
     // console.log('res-------', res);
+    await rp({
+      url: imgSrc,
+      resolveWithFullResponse: true,
+      headers
+    }).pipe(fs.createWriteStream(`${downloadPath}/${index}.jpg`));//下载
     cb(res);
   }).catch(err => {
     // console.log('err------', err);
